@@ -1,0 +1,24 @@
+#!/bin/bash
+#/ Usage: logall <file> [-h]
+#/
+#/ Appends timestamps to every stdio output, and logs output to <file>.
+#/ To leverage within scripts, call "source logall <file>"
+#/ OPTIONS:
+#/   -h | --help     Show this message.
+#/
+
+set -e
+
+show_help() {
+  grep '^#/' < "$0" | cut -c4-
+  exit 2
+}
+
+if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+  show_help
+fi
+
+
+LOGFILE="$1"
+exec > >( ts '[%Y-%m-%d %H:%M:%S]' | tee -a "$LOGFILE" )
+exec 2>&1
